@@ -15,6 +15,7 @@ module "compute" {
   subnet_ids             = module.network.private_subnet_ids
   allow_traffic_from_sgs = [module.load_balancing.alb_sg_id]
   load_balancer_arn      = module.load_balancing.load_balancer_arn
+  access_to_bucket_role_arn = module.storage.access_to_bucket_role_arn
 
   # database config
   db_host                = module.database.database_host

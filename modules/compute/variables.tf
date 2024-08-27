@@ -34,3 +34,7 @@ variable "db_password" {
   type      = string
   sensitive = true
 }
+
+variable "access_to_bucket_role_arn" {
+  type = string
+}
