@@ -10,4 +10,12 @@ terraform {
       version = "3.6.2"
     }
   }
+
+  backend "s3" {
+    bucket  = "terraform-state-062354364563"
+    key     = "terraform.tfstate"
+    region  = "eu-central-1"
+    encrypt = true
+    profile = "062354364563_AdministratorAccess" # TODO: remove
+  }
 }

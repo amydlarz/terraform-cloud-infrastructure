@@ -28,6 +28,7 @@ module "database" {
   source     = "./modules/database"
   vpc_id     = module.network.vpc_id
   subnet_ids = module.network.private_subnet_ids
+  allow_traffic_from_sgs = [module.compute.ecs_sg_id]
 }
 
 module "storage" {

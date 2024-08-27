@@ -4,10 +4,10 @@ resource "aws_ecs_cluster" "main" {
 
 resource "aws_ecs_task_definition" "nginx" {
   family                   = "nginx-task"
-  network_mode             = "awsvpc" # Required for Fargate
+  network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
-  cpu                      = "256" # Minimum CPU unit
-  memory                   = "512" # Minimum memory in MiB
+  cpu                      = "256"
+  memory                   = "512"
 
   container_definitions = jsonencode([
     {
@@ -26,7 +26,6 @@ resource "aws_ecs_task_definition" "nginx" {
     }
   ])
 }
-
 
 resource "aws_lb_target_group" "nginx" {
   name        = "nginx-target-group"
