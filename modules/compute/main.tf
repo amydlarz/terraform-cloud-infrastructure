@@ -102,3 +102,45 @@ resource "aws_security_group" "ecs" {
     Name = "ecs-sg"
   }
 }
+
+resource "aws_appautoscaling_target" "ecs" {
+  max_capacity       = 10
+  min_capacity       = 1
+  resource_id        = "service/${aws_ecs_cluster.main.id}/${aws_ecs_service.nginx.name}"
+  scalable_dimension = "ecs:service:DesiredCount"
+  service_namespace  = "ecs"
+}
+
+# Auto Scaling Policy for Scaling Out
+resource "aws_appautoscaling_policy" "scale_out" {
+  name                   = "scale-out"
+  policy_type            = "StepScaling"
+  resource_id            = aws_appautoscaling_target.ecs.id
+  scalable_dimension     = "ecs:service:DesiredCount"
+  service_namespace      = "ecs"
+  step_scaling_policy_configuration {
+    adjustment_type = "ChangeInCapacity"
+    cooldown        = 60
+    step_adjustment {
+      scaling_adjustment = 1
+      metric_interval_lower_bound = "0"
+    }
+  }
+}
+
+# Auto Scaling Policy for Scaling In
+resource "aws_appautoscaling_policy" "scale_in" {
+  name                   = "scale-in"
+  policy_type            = "StepScaling"
+  resource_id            = aws_appautoscaling_target.ecs.id
+  scalable_dimension     = "ecs:service:DesiredCount"
+  service_namespace      = "ecs"
+  step_scaling_policy_configuration {
+    adjustment_type = "ChangeInCapacity"
+    cooldown        = 60
+    step_adjustment {
+      scaling_adjustment = -1
+      metric_interval_upper_bound = "0"
+    }
+  }
+}
